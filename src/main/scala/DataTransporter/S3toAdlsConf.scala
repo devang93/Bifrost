@@ -6,7 +6,7 @@ import org.rogach.scallop.exceptions.Help
 /**
   * Created by depatel on 5/24/18.
   */
-class s3toadlsConf(args: Seq[String]) extends ScallopConf(args) {
+class S3toAdlsConf(args: Seq[String]) extends ScallopConf(args) {
 
   val s3path = opt[String](name="s3path", required = true, noshort = false, descr = "s3 input file path")
   val s3accessKey = opt[String](name="s3accessKey", required = true, noshort = false, descr = "s3 access key")
