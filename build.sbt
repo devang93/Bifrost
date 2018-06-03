@@ -1,4 +1,4 @@
-name := "Spark_Oracle_Data_Transfer"
+name := "Spark_Data_Ingestor"
 
 version := "1.0.1"
 

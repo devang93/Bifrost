@@ -1,16 +1,17 @@
-import DataTransporter.S3toAdlsConf
+package DataTransporter
+
 import org.apache.spark.sql.SparkSession
 import org.slf4j.LoggerFactory
 
-
-
+/**
+  * Created by Devang Patel on 6/1/2018.
+  */
 object S3toADLS {
 
     private val log = LoggerFactory.getLogger("S3toAdls")
 
-    def main(args: Array[String]): Unit = {
+    def execute(conf: ApplicationConf): Unit = {
 
-        val conf = new S3toAdlsConf(args)
         val spark = SparkSession.builder()
                     .config("spark.hadoop.s3a.access.key", conf.s3accessKey())
                     .config("spark.hadoop.s3a.secret.key", conf.s3secretKey())
