@@ -22,7 +22,8 @@ class ApplicationConf(args: Seq[String]) extends ScallopConf(args) {
   val s3secretKey = opt[String](name="s3secretKey", noshort = false, required = true, descr = "s3 secret key")
   val inputFormat = opt[String](name="inputFormat", noshort = false, required = true, descr = "input file format")
   val outputFormat = opt[String](name="outputFormat", noshort = false, required = true, descr = "output file format")
-  val inputOptions = opt[String](name="inputOptions", noshort = false, required = true, descr = "input options for reading data")
+  val inputOptions = opt[String](name="inputOptions", noshort = false, required = false, descr = "input options for reading data")
+  val outputOptions = opt[String](name="outputOptions", noshort = false, required = false, descr = "output options for writing data")
 
   // ADLS Parameters
   val adls = opt[String](name = "adls", noshort = false, required = true, descr = "Azure Data Lake store uri")
