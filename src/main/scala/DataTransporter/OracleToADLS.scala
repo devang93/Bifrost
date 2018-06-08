@@ -13,6 +13,7 @@ object OracleToADLS {
 
     private val log = LoggerFactory.getLogger("OracleSparkTransfer.Main")
 
+    // Deprecated: We are not using ROWNUM to partition the table anymore.
     // function to get lower and upper bound.
     def getBounds(spark: SparkSession, jdbcUrl: String, queryString: String, oracleProperties: Properties) = {
       log.info("Getting upper and lower bound for the data to be transferred...")
@@ -66,13 +67,12 @@ object OracleToADLS {
           val queryString = substituteExecutionParams(new String(Files.readAllBytes(Paths.get(conf.sqlQuery())), "UTF-8"), conf)
           log.info("Oracle Query to pull data: ")
           log.info(queryString)
-          val bounds  = getBounds(spark, jdbcURL, queryString, oracleProperties)
 
           val oracleDF = spark.read.jdbc(url = jdbcURL,
-            table = s"(SELECT ROWNUM as NUM_RECORDS, t.* FROM (${queryString}) t ) oracle_data_pull",
+            table = s"(SELECT mod(ora_hash(rowid, ${conf.numPartitions()})) as NUM_RECORDS, t.* FROM (${queryString}) t ) oracle_data_pull",
             columnName = "num_records",
-            lowerBound = bounds._1,
-            upperBound = bounds._2,
+            lowerBound = 0,
+            upperBound = conf.numPartitions(),
             numPartitions = conf.numPartitions(),
             connectionProperties = oracleProperties)
 
