@@ -22,13 +22,13 @@ object S3toADLS {
                     .appName("s3_to_adls_transfer")
                     .getOrCreate()
 
-        val inputDF = spark.read.format("csv")
+        val inputDF = spark.read.format(conf.inputFormat())
                     .option("header", "false")
                     .option("inferSchema", "false")
                     .option("delimiter", "|")
                     .load(conf.s3path())
 
-        inputDF.write.format("csv")
+        inputDF.write.format(conf.outputFormat())
               .option("delimiter", "|").option("compression", "gzip")
               .save(conf.adls()+conf.adlsOutputPath())
 
