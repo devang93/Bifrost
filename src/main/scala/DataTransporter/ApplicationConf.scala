@@ -9,6 +9,11 @@ import org.rogach.scallop.exceptions.Help
 class ApplicationConf(args: Seq[String]) extends ScallopConf(args) {
 
   val ingestionType = opt[String](name = "ingestionType", noshort = false, required = true, descr = "Ingestion type")
+  val inputFormat = opt[String](name="inputFormat", noshort = false, descr = "input file format")
+  val outputFormat = opt[String](name="outputFormat", noshort = false, descr = "output file format")
+  val inputOptions = opt[String](name="inputOptions", noshort = false, descr = "input options for reading data")
+  val outputOptions = opt[String](name="outputOptions", noshort = false, descr = "output options for writing data")
+
   // Oracle Parameters
   val user = opt[String](name = "user", noshort = false, descr = "Oracle user name")
   val password = opt[String](name = "password", noshort = false, descr = "Oracle user password")
@@ -20,10 +25,6 @@ class ApplicationConf(args: Seq[String]) extends ScallopConf(args) {
   val s3path = opt[String](name="s3path", noshort = false, descr = "s3 input file path")
   val s3accessKey = opt[String](name="s3accessKey", noshort = false, descr = "s3 access key")
   val s3secretKey = opt[String](name="s3secretKey", noshort = false, descr = "s3 secret key")
-  val inputFormat = opt[String](name="inputFormat", noshort = false, descr = "input file format")
-  val outputFormat = opt[String](name="outputFormat", noshort = false, descr = "output file format")
-  val inputOptions = opt[String](name="inputOptions", noshort = false, descr = "input options for reading data")
-  val outputOptions = opt[String](name="outputOptions", noshort = false, descr = "output options for writing data")
 
   // Google BigQuery Parameters
   val gcprojectId = opt[String](name="gcprojectId", noshort = false, descr = "google cloud project id")

@@ -40,7 +40,7 @@ object GoogleBigQuerytoADLS {
         log.info(s"Job ${job.getJobId} Status: ${job.getStatus.getState}")
       } catch {
         case e: BigQueryException => log.error("Big Query Job failed with Exception:"); e.printStackTrace()
-        case e: Exception => log.error("Exception occured while doing extract job!"); e.printStackTrace()
+        case e: Exception => log.error("Exception during extract job!"); e.printStackTrace()
       }
 
     val spark = SparkSession.builder()
@@ -48,10 +48,17 @@ object GoogleBigQuerytoADLS {
       .config("fs.gd.project.id", conf.gcprojectId())
       .config("google.cloud.auth.service.accound.enable", "true")
       .config("google.cloud.auth.service.account.json.keyfile", "google_cred.json")
+      .config("spark.hadoop.dfs.adls.oauth2.client.id", conf.spnClientId())
+      .config("spark.hadoop.dfs.adls.oauth2.credential", conf.spnClientSecret())
+      .config("spark.hadoop.dfs.adls.oauth2.access.token.provider.type", "ClientCredential")
+      .config("spark.hadoop.dfs.adls.oauth2.refresh.url", s"https://login.microsoftonline.com/${conf.tenantId()}/oauth2/token")
       .appName("googlecloud_to_adls")
       .getOrCreate()
 
-    val raw = spark.read.json(conf.gcpath())
+    val raw = spark.read.format(conf.inputFormat()).load(conf.gcpath())
     println(raw.count())
+
+    raw.write.format(conf.outputFormat())
+      .save(conf.adlsOutputPath())
   }
 }
