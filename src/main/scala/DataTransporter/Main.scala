@@ -42,6 +42,7 @@ object Main {
     appConf.ingestionType() match {
       case "ORACLE_TO_ADLS" => OracleToADLS.execute(appConf)
       case "S3_TO_ADLS" => println("S3 to ADLS is invoked")//S3toADLS.execute(appConf)
+      case "GC_TO_ADLS" => GoogleBigQuerytoADLS.execute(appConf)
     }
   }
 }

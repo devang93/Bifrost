@@ -25,17 +25,26 @@ class ApplicationConf(args: Seq[String]) extends ScallopConf(args) {
   val inputOptions = opt[String](name="inputOptions", noshort = false, descr = "input options for reading data")
   val outputOptions = opt[String](name="outputOptions", noshort = false, descr = "output options for writing data")
 
+  // Google BigQuery Parameters
+  val gcprojectId = opt[String](name="gcprojectId", noshort = false, descr = "google cloud project id")
+  val bqdatasetName = opt[String](name="bqdatasetName", noshort = false, descr = "google bigquert dataset name")
+  val bqtableName = opt[String](name="bqtableName", noshort = false, descr = "google bigquery table to pull data")
+  val gcpath = opt[String](name="gcpath", noshort = false, descr = "google cloud path to extract data")
+  val extractCompression = opt[String](name="extractCompression", noshort = false, descr = "compression for extracted files")
+  val extractFormat = opt[String](name="extractFormat", noshort = false, descr = "format for extracted data")
+  val googleCredFile = opt[String](name="googleCredFile", noshort = false, descr = "google credentials json file")
+
   // ADLS Parameters
-  val adls = opt[String](name = "adls", noshort = false, required = true, descr = "Azure Data Lake store uri")
-  val adlsOutputPath = opt[String](name = "adlsOutputPath", noshort = false, required = true, descr = "ADLS output path")
-  val tenantId = opt[String](name = "tenantId", noshort = false, required = true, descr = "Azure tenantId")
-  val spnClientId = opt[String](name = "spnClientId", noshort = false, required = true, descr = "Azure service principle ApplicationId")
-  val spnClientSecret = opt[String](name = "spnClientSecret", noshort = false, required = true, descr = "Azure service principle secret")
-  val writeMode = opt[String](name = "writeMode", noshort = false, required = false, default = Some("overwrite"), descr = "Writemode at output location")
-  val numPartitions = opt[Int](name = "numPartitions", noshort = false, required = false, descr = "Number of partitions for output data")
-  val job_run_id = opt[String](name = "job_run_id", noshort = false, required = false, descr = "Optional job execution id")
-  val execution_date = opt[String](name = "execution_date", noshort = false, required = false, descr = "Optional execution date")
-  val prev_exec_date = opt[String](name = "prev_exec_date", noshort = false, required = false, descr = "Optional previous execution date")
+  val adls = opt[String](name = "adls", noshort = false, descr = "Azure Data Lake store uri")
+  val adlsOutputPath = opt[String](name = "adlsOutputPath", noshort = false, descr = "ADLS output path")
+  val tenantId = opt[String](name = "tenantId", noshort = false, descr = "Azure tenantId")
+  val spnClientId = opt[String](name = "spnClientId", noshort = false, descr = "Azure service principle ApplicationId")
+  val spnClientSecret = opt[String](name = "spnClientSecret", noshort = false, descr = "Azure service principle secret")
+  val writeMode = opt[String](name = "writeMode", noshort = false, default = Some("overwrite"), descr = "Writemode at output location")
+  val numPartitions = opt[Int](name = "numPartitions", noshort = false, descr = "Number of partitions for output data")
+  val job_run_id = opt[String](name = "job_run_id", noshort = false, descr = "Optional job execution id")
+  val execution_date = opt[String](name = "execution_date", noshort = false, descr = "Optional execution date")
+  val prev_exec_date = opt[String](name = "prev_exec_date", noshort = false, descr = "Optional previous execution date")
 
   // Validation of arguments.
   validate (ingestionType) { (ingestion) =>
@@ -53,6 +62,14 @@ class ApplicationConf(args: Seq[String]) extends ScallopConf(args) {
         codependent(s3path, s3accessKey, s3secretKey, inputFormat, outputFormat, inputOptions)
         println("All S3 parameters are defined")
         codependent(adls, adlsOutputPath, tenantId, spnClientId, spnClientSecret)
+        println("All ADLS parameters are defined")
+        Right(Unit)
+      }
+      case "GC_TO_ADLS" => {
+        println("Data Ingestion Requested from Google Cloud to ADLS.")
+        codependent(gcprojectId, bqdatasetName, bqtableName, gcpath, extractCompression, extractFormat, googleCredFile)
+        println("All Google Cloud parameters are defined")
+//        codependent(adls, adlsOutputPath, tenantId, spnClientId, spnClientSecret)
         println("All ADLS parameters are defined")
         Right(Unit)
       }
