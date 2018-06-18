@@ -1,6 +1,6 @@
-name := "Spark_Data_Transporter"
+name := "Bifrost"
 
-version := "1.0.2"
+version := "1.0.1"
 
 scalaVersion := "2.11.8"
 
